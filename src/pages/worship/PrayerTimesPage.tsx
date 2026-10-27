@@ -26,6 +26,7 @@ import { PrayerTimeCard } from '../../components/worship/PrayerTimeCard';
 import { LocationPermissionDialog } from '../../components/worship/LocationPermissionDialog';
 import { NotificationPermissionDialog } from '../../components/worship/NotificationPermissionDialog';
 import { PrayerName } from '../../types/worship';
+import { PRAYER_SCHEDULE } from '../../config/prayerConfig';
 
 interface PrayerTimesPageProps {
   onOpenAdhanSettings: () => void;
@@ -128,8 +129,10 @@ export const PrayerTimesPage: React.FC<PrayerTimesPageProps> = ({
     return () => clearTimeout(t);
   }, [simulationCountdown]);
 
+  const [useConfiguredSchedule, setUseConfiguredSchedule] = useState(false);
+
   const hijriInfo = hijriCalendarService.getHijriDate(selectedDate);
-  const prayerTimes = prayerTimesService.calculatePrayerTimes(
+  const baseCalculatedTimes = prayerTimesService.calculatePrayerTimes(
     selectedDate,
     location.latitude,
     location.longitude,
@@ -138,6 +141,19 @@ export const PrayerTimesPage: React.FC<PrayerTimesPageProps> = ({
     adhanSettings.asrJuristic,
     adhanSettings.imsakOffsetMinutes ?? 10
   );
+
+  const prayerTimes = useConfiguredSchedule
+    ? {
+        imsak: PRAYER_SCHEDULE.imsak,
+        fajr: PRAYER_SCHEDULE.times.subuh,
+        sunrise: PRAYER_SCHEDULE.terbit,
+        dhuhr: PRAYER_SCHEDULE.times.dzuhur,
+        asr: PRAYER_SCHEDULE.times.ashar,
+        maghrib: PRAYER_SCHEDULE.times.maghrib,
+        isha: PRAYER_SCHEDULE.times.isya
+      }
+    : baseCalculatedTimes;
+
   const nextPrayer = prayerTimesService.getNextPrayer(prayerTimes, currentTime);
 
   const formatCountdown = (secs: number) => {
@@ -253,6 +269,42 @@ export const PrayerTimesPage: React.FC<PrayerTimesPageProps> = ({
               </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* Mode Jadwal Salat: Konfigurasi Terpusat vs Astronomis */}
+      <div className="bg-white p-3.5 rounded-2xl border border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+            Sumber Jadwal Waktu Salat
+          </span>
+          <p className="text-xs text-slate-700 font-medium mt-0.5">
+            {useConfiguredSchedule
+              ? 'Jadwal Konfigurasi Tetap: Subuh 04:13 • Dzuhur 11:43 • Ashar 14:55 • Maghrib 17:51 • Isya 19:02 WIB'
+              : `Jadwal Astronomis Kemenag RI berdasarkan koordinat ${location.cityName || 'lokasi terpilih'}`}
+          </p>
+        </div>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() => setUseConfiguredSchedule(false)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+              !useConfiguredSchedule
+                ? 'bg-[#031B4A] text-[#00A6FF]'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            }`}
+          >
+            Astronomis
+          </button>
+          <button
+            onClick={() => setUseConfiguredSchedule(true)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+              useConfiguredSchedule
+                ? 'bg-[#00A6FF] text-[#031B4A]'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            }`}
+          >
+            Konfigurasi Tetap (WIB)
+          </button>
         </div>
       </div>
 

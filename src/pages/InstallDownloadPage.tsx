@@ -108,19 +108,25 @@ export const InstallDownloadPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Tab A: PWA Installation Guidelines */}
+      {/* Tab A: PWA Installation Guidelines (Android, iOS, Desktop) */}
       {activeTab === 'pwa' && (
-        <div className="space-y-4">
-          {/* Android PWA Guide */}
+        <div className="space-y-5">
+          {/* 1. Android PWA Guide */}
           <div className="p-5 sm:p-6 bg-white border border-[#E2E8F0] rounded-3xl shadow-2xs space-y-4">
-            <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-sm">
-                <Chrome className="w-5 h-5" />
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-sm">
+                  <Chrome className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-[#000000]">1. Instalasi di Android (Chrome / Edge / Samsung)</h3>
+                  <p className="text-xs text-slate-500">Ikon di App Drawer, splash screen, hemat memori (&lt; 2MB), dan tilawah offline.</p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-[#000000]">Instalasi di Android (Chrome / Edge)</h3>
-                <p className="text-xs text-slate-500">Hemat ruang memori, update otomatis, dan mendukung bacaan offline.</p>
-              </div>
+
+              <span className="hidden sm:inline-flex px-2.5 py-1 bg-emerald-50 text-emerald-700 font-bold rounded-lg text-xs">
+                WebAPK Ready
+              </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-700">
@@ -144,37 +150,91 @@ export const InstallDownloadPage: React.FC = () => {
                 className="w-full flex items-center justify-center gap-2 py-3 bg-[#000000] hover:bg-[#1352B9] text-white font-bold text-xs sm:text-sm rounded-xl transition-colors shadow-xs"
               >
                 <Download className="w-4 h-4 text-[#00A6FF]" />
-                <span>Tekan Disini untuk Pasang Aplikasi ke Android</span>
+                <span>Tekan Disini untuk Pasang Langsung ke Android</span>
               </button>
             )}
           </div>
 
-          {/* iOS Safari Guide */}
+          {/* 2. iOS Safari Guide */}
           <div className="p-5 sm:p-6 bg-white border border-[#E2E8F0] rounded-3xl shadow-2xs space-y-4">
-            <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-              <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center font-bold text-sm">
-                <Apple className="w-5 h-5" />
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center font-bold text-sm">
+                  <Apple className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-[#000000]">2. Instalasi di iPhone &amp; iPad (Safari)</h3>
+                  <p className="text-xs text-slate-500">Pengalaman mandiri di Home Screen iOS tanpa perlu melalui App Store.</p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-[#000000]">Instalasi di iPhone &amp; iPad (Safari)</h3>
-                <p className="text-xs text-slate-500">Apple WebKit Home Screen standalone experience tanpa App Store.</p>
-              </div>
+
+              <span className="hidden sm:inline-flex px-2.5 py-1 bg-slate-100 text-slate-800 font-bold rounded-lg text-xs">
+                Apple WebKit PWA
+              </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-700">
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <strong className="block text-[#031B4A] mb-1">1. Buka di Safari</strong>
-                Buka tautan val-qur'an menggunakan peramban <strong>Safari</strong> di perangkat iOS Anda.
+                Buka tautan val-qur'an menggunakan peramban <strong>Safari</strong> di perangkat iPhone / iPad Anda.
               </div>
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <strong className="block text-[#031B4A] mb-1">2. Ketuk Tombol "Bagikan"</strong>
-                Ketuk tombol <strong>Share / Bagikan</strong> (ikon kotak berpanah ke atas di bagian bawah layar).
+                Ketuk tombol <strong>Share / Bagikan</strong> (ikon kotak berpanah ke atas di bagian bawah layar Safari).
               </div>
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
                 <strong className="block text-[#031B4A] mb-1">3. Tambahkan ke Layar Utama</strong>
-                Gulir ke bawah dan ketuk <strong>"Tambahkan ke Layar Utama" (Add to Home Screen)</strong>.
+                Gulir ke bawah dan ketuk <strong>"Tambahkan ke Layar Utama" (Add to Home Screen)</strong> lalu tekan <strong>Tambah</strong>.
               </div>
             </div>
+          </div>
+
+          {/* 3. Desktop Guide (Windows, macOS, Linux) */}
+          <div className="p-5 sm:p-6 bg-white border border-[#E2E8F0] rounded-3xl shadow-2xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-blue-50 text-[#1352B9] flex items-center justify-center font-bold text-sm">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-[#000000]">3. Instalasi di Desktop (Windows, macOS &amp; Linux)</h3>
+                  <p className="text-xs text-slate-500">Jendela mandiri tanpa tab peramban, pin ke Taskbar / Dock, dan akses keyboard.</p>
+                </div>
+              </div>
+
+              <span className="hidden sm:inline-flex px-2.5 py-1 bg-blue-50 text-[#1352B9] font-bold rounded-lg text-xs">
+                Windows / Mac / Linux
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-700">
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                <strong className="block text-[#031B4A] mb-1">1. Cari Ikon di Bilah URL</strong>
+                Pada Google Chrome, Edge, atau Brave, periksa sisi kanan kolom alamat URL (Omnibox). Klik ikon <strong>Monitor dengan panah</strong> atau simbol <strong>(+)</strong>.
+              </div>
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                <strong className="block text-[#031B4A] mb-1">2. Klik "Install"</strong>
+                Klik tombol <strong>"Install"</strong> pada pop-up konfirmasi peramban desktop.
+              </div>
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                <strong className="block text-[#031B4A] mb-1">3. Sematkan ke Taskbar / Dock</strong>
+                Aplikasi langsung terbuka di jendela mandiri. Klik kanan ikonnya di Taskbar Windows atau Dock macOS lalu pilih <strong>"Pin to taskbar / Keep in Dock"</strong>.
+              </div>
+            </div>
+
+            {isInstallable && (
+              <button
+                onClick={promptInstall}
+                className="w-full flex items-center justify-center gap-2 py-3 bg-[#000000] hover:bg-[#1352B9] text-white font-bold text-xs sm:text-sm rounded-xl transition-colors shadow-xs"
+              >
+                <Download className="w-4 h-4 text-[#00A6FF]" />
+                <span>Tekan Disini untuk Pasang Aplikasi ke Desktop</span>
+              </button>
+            )}
           </div>
         </div>
       )}

@@ -40,6 +40,11 @@ interface AppContextValue {
   recordAyahRead: (surahNumber: number, ayahNumber: number) => void;
   isOnline: boolean;
   isInstallable: boolean;
+  isStandalone: boolean;
+  isInstallModalOpen: boolean;
+  initialInstallTab: 'android' | 'ios' | 'desktop' | 'native';
+  openInstallModal: (tab?: 'android' | 'ios' | 'desktop' | 'native') => void;
+  closeInstallModal: () => void;
   promptInstall: () => Promise<boolean>;
   toast: ToastMessage | null;
   showToast: (message: string, type?: ToastMessage['type']) => void;
@@ -60,9 +65,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [installPromptEvent, setInstallPromptEvent] = useState<any>(null);
   const [isInstallable, setIsInstallable] = useState<boolean>(false);
+  const [isStandalone, setIsStandalone] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as unknown as { standalone?: boolean }).standalone === true
+    );
+  });
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState<boolean>(false);
+  const [initialInstallTab, setInitialInstallTab] = useState<'android' | 'ios' | 'desktop' | 'native'>('android');
   const [toast, setToast] = useState<ToastMessage | null>(null);
 
-  // Monitor online / offline status
+  // Monitor online / offline status & PWA hooks
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
@@ -76,32 +90,63 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    // Register Service Worker if supported
-    if ('serviceWorker' in navigator && import.meta.env.PROD) {
+    // Register Service Worker whenever supported (dev, preview & production)
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/sw.js')
         .then((reg) => {
-          console.log('val-qur\'an Service Worker registered:', reg.scope);
+          console.log("val-qur'an Service Worker registered:", reg.scope);
         })
         .catch((err) => {
           console.warn('SW registration skipped or failed:', err);
         });
     }
 
-    // Listen for beforeinstallprompt
+    // Listen for beforeinstallprompt (Android / Desktop Chromium)
     const handleBeforeInstall = (e: Event) => {
       e.preventDefault();
       setInstallPromptEvent(e);
       setIsInstallable(true);
     };
 
+    // Listen for appinstalled
+    const handleAppInstalled = () => {
+      setIsInstallable(false);
+      setIsStandalone(true);
+      setInstallPromptEvent(null);
+      setIsInstallModalOpen(false);
+      showToast("Alhamdulillah! val-qur'an berhasil dipasang di perangkat Anda.", 'success');
+    };
+
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+      window.removeEventListener('appinstalled', handleAppInstalled);
     };
+  }, []);
+
+  const openInstallModal = useCallback((tab?: 'android' | 'ios' | 'desktop' | 'native') => {
+    if (tab) {
+      setInitialInstallTab(tab);
+    } else {
+      const ua = navigator.userAgent.toLowerCase();
+      if (/iphone|ipad|ipod/.test(ua)) {
+        setInitialInstallTab('ios');
+      } else if (/android/.test(ua)) {
+        setInitialInstallTab('android');
+      } else {
+        setInitialInstallTab('desktop');
+      }
+    }
+    setIsInstallModalOpen(true);
+  }, []);
+
+  const closeInstallModal = useCallback(() => {
+    setIsInstallModalOpen(false);
   }, []);
 
   const showToast = useCallback((message: string, type: ToastMessage['type'] = 'info') => {
@@ -218,6 +263,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         recordAyahRead,
         isOnline,
         isInstallable,
+        isStandalone,
+        isInstallModalOpen,
+        initialInstallTab,
+        openInstallModal,
+        closeInstallModal,
         promptInstall,
         toast,
         showToast,

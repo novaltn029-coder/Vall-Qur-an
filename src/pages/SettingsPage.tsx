@@ -14,7 +14,15 @@ import {
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
 
 export const SettingsPage: React.FC = () => {
-  const { settings, updateSettings, resetSettings, isInstallable, promptInstall } = useApp();
+  const {
+    settings,
+    updateSettings,
+    resetSettings,
+    isInstallable,
+    promptInstall,
+    openInstallModal,
+    isStandalone
+  } = useApp();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   return (
@@ -29,26 +37,42 @@ export const SettingsPage: React.FC = () => {
         </p>
       </div>
 
-      {/* PWA Install Banner if applicable */}
-      {isInstallable && (
-        <div className="p-5 bg-[#031B4A] text-white rounded-2xl border border-[#022478] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#00A6FF]/20 text-[#00A6FF] flex items-center justify-center shrink-0">
+      {/* Multi-platform PWA Install Banner */}
+      {!isStandalone && (
+        <div className="p-5 bg-gradient-to-r from-[#031B4A] to-[#022478] text-white rounded-2xl border border-[#1352B9] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-xl bg-[#00A6FF]/20 text-[#00A6FF] flex items-center justify-center shrink-0 border border-[#00A6FF]/30">
               <Download className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white">Pasang Aplikasi val-qur'an</h3>
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <span>Pasang Aplikasi {APP_CONFIG.appName}</span>
+                <span className="text-[10px] bg-[#00A6FF] text-[#031B4A] font-extrabold px-1.5 py-0.5 rounded-full">
+                  PWA
+                </span>
+              </h3>
               <p className="text-xs text-[#C2DFF3] mt-0.5">
-                Install sebagai Progressive Web App untuk akses cepat &amp; tilawah offline.
+                Dukungan instalasi penuh di Android, iPhone/iPad, dan Desktop (Windows/Mac/Linux).
               </p>
             </div>
           </div>
-          <button
-            onClick={promptInstall}
-            className="px-4 py-2 bg-[#00A6FF] text-[#031B4A] text-xs font-bold rounded-xl hover:bg-white transition-colors shrink-0"
-          >
-            Pasang Sekarang
-          </button>
+
+          <div className="flex items-center gap-2">
+            {isInstallable && (
+              <button
+                onClick={promptInstall}
+                className="px-4 py-2 bg-[#000000] text-white text-xs font-bold rounded-xl hover:bg-[#1352B9] transition-colors shrink-0 shadow-xs"
+              >
+                Pasang (1-Klik)
+              </button>
+            )}
+            <button
+              onClick={() => openInstallModal()}
+              className="px-4 py-2 bg-[#00A6FF] text-[#031B4A] text-xs font-bold rounded-xl hover:bg-white transition-colors shrink-0 shadow-xs"
+            >
+              Panduan Semua Perangkat
+            </button>
+          </div>
         </div>
       )}
 

@@ -6,12 +6,14 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "portrait-primary",
   "background_color": "#FFFFFF",
   "theme_color": "#031B4A",
   "lang": "id",
   "dir": "ltr",
-  "categories": ["books", "lifestyle", "utilities"],
+  "prefer_related_applications": false,
+  "categories": ["books", "lifestyle", "education", "utilities"],
   "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -37,5 +39,36 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Baca Al-Qur'an",
+      "short_name": "Al-Qur'an",
+      "description": "Buka daftar 114 surat Al-Qur'an",
+      "url": "/#surahs",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Waktu Salat",
+      "short_name": "Salat",
+      "description": "Jadwal salat 5 waktu dan hitung mundur",
+      "url": "/#prayer-times",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Arah Kiblat",
+      "short_name": "Kiblat",
+      "description": "Kompas kiblat interaktif",
+      "url": "/#qibla",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Do'a Harian",
+      "short_name": "Do'a",
+      "description": "Kumpulan do'a harian dan terjemahan",
+      "url": "/#duas",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
   ]
 }
+

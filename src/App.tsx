@@ -14,6 +14,7 @@ import { MiniPlayer } from './components/audio/MiniPlayer';
 import { ToastNotification } from './components/common/ToastNotification';
 import { OfflineBanner } from './components/common/OfflineBanner';
 import { InstallAppPrompt } from './components/common/InstallAppPrompt';
+import { InstallAppModal } from './components/common/InstallAppModal';
 
 import { HomePage } from './pages/HomePage';
 import { SurahListPage } from './pages/SurahListPage';
@@ -277,6 +278,9 @@ function QuranAppContent() {
 
       {/* Mobile Bottom Navigation */}
       <BottomNavigation currentTab={currentTab} onNavigate={handleNavigate} />
+
+      {/* Multi-Platform PWA & Native Install Modal */}
+      <InstallAppModal onNavigateToDownloadPage={() => handleNavigate('download')} />
 
       {/* Global Toast Notifications */}
       <ToastNotification />
