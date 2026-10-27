@@ -1,0 +1,48 @@
+:root {
+  --color-black: #000000;
+  --color-navy: #031B4A;
+  --color-deep-blue: #022478;
+  --color-blue: #1352B9;
+  --color-electric-blue: #00A6FF;
+  --color-ice-blue: #C2DFF3;
+  --color-white: #FFFFFF;
+
+  --font-arabic: 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.font-arabic {
+  font-family: var(--font-arabic);
+  direction: rtl;
+  text-align: right;
+  line-height: 2.2;
+}
+
+.font-ui {
+  font-family: var(--font-sans);
+}
+
+/* Custom scrollbar for clean reading experience */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Highlight styling for search matches */
+.search-highlight {
+  background-color: #C2DFF3;
+  color: #031B4A;
+  padding: 0 3px;
+  border-radius: 2px;
+  font-weight: 600;
+}

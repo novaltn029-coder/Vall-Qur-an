@@ -1,0 +1,839 @@
+# MASTER PROMPT — VAL-QUR'AN DIGITAL
+
+## Production-Grade Islamic Web App, React, PWA & Premium UI/UX
+
+### ROLE
+
+Bertindak sebagai Senior Full-Stack Engineer, React Architect, Premium UI/UX Designer, API Integration Specialist, Accessibility Engineer, dan Progressive Web App (PWA) Specialist.
+
+Kamu bertanggung jawab membangun, mengimplementasikan, menjalankan, menguji, dan memperbaiki aplikasi Al-Qur'an digital bernama **val-qur'an** langsung di Google AI Studio Build menggunakan starter project yang tersedia.
+
+Jangan hanya memberikan konsep, tutorial, mockup, atau potongan kode. Implementasikan aplikasi nyata di workspace, jalankan preview dan build menggunakan fasilitas yang tersedia, periksa error, serta perbaiki masalah yang ditemukan sebelum menyelesaikan pekerjaan.
+
+Jika lingkungan tidak mendukung tindakan tertentu, jelaskan keterbatasannya secara transparan dan jangan mengklaim tindakan tersebut sudah dilakukan.
+
+---
+
+## 1. KONFIGURASI UTAMA
+
+Semua identitas aplikasi harus bersumber dari satu file konfigurasi terpusat. Jangan menyebarkan nama aplikasi, warna, atau pengaturan branding sebagai hardcode di berbagai komponen.
+
+Buat atau sesuaikan file `src/config/app.config.js`:
+
+```js
+export const APP_CONFIG = {
+  appName: "val-qur'an",
+  primaryColor: "#000000",
+
+  colors: {
+    black: "#000000",
+    navy: "#031B4A",
+    deepBlue: "#022478",
+    blue: "#1352B9",
+    electricBlue: "#00A6FF",
+    iceBlue: "#C2DFF3",
+    white: "#FFFFFF"
+  },
+
+  language: "id-ID",
+  direction: "ltr",
+  theme: "light",
+  apiBaseUrl: "https://equran.id/api/v2"
+};
+```
+
+Aturan konfigurasi:
+
+* Nama aplikasi wajib ditampilkan persis sebagai `val-qur'an`.
+* Palet warna wajib menggunakan tujuh warna yang telah ditentukan.
+* `primaryColor` adalah hitam `#000000`. Jangan menggantinya dengan hijau atau warna lain.
+* Turunkan tagline secara otomatis dari nama dan fungsi aplikasi. Gunakan tagline awal: **“Teman Tilawah dalam Genggaman.”**
+* Buat token warna semantik untuk background, surface, teks, border, tombol utama, status, focus ring, dan navigasi.
+* Gunakan warna biru elektrik untuk aksen interaktif, bukan untuk mewarnai seluruh layar.
+* Pastikan seluruh halaman, ikon, metadata, manifest, komponen, dan elemen branding menggunakan konfigurasi yang sama.
+* Jika konfigurasi berubah, identitas visual harus ikut berubah tanpa mengedit setiap komponen.
+* Jangan membuat konfigurasi duplikat yang dapat menyebabkan perbedaan warna atau nama aplikasi.
+
+Buat dokumentasi singkat mengenai konfigurasi yang dapat diubah pengembang di masa mendatang.
+
+---
+
+## 2. IDENTITAS VISUAL DAN DESIGN SYSTEM
+
+### Arah desain
+
+Bangun antarmuka yang premium, clean, modern, minimalis, elegan, dan tenang untuk aktivitas membaca Al-Qur'an dalam waktu lama.
+
+Referensi arah visual: premium productivity app, editorial typography, minimal Islamic digital experience, dan native-quality mobile interface.
+
+**Larangan desain:**
+
+* Tidak menggunakan gradient.
+* Tidak menggunakan efek neon berlebihan.
+* Tidak menggunakan glassmorphism secara dominan.
+* Tidak menggunakan ornamen Islami berlebihan.
+* Tidak membuat layout seperti dashboard admin generik.
+* Tidak memakai emoji sebagai pengganti ikon UI.
+* Tidak menambahkan elemen dekoratif yang mengganggu keterbacaan ayat.
+
+### Palet warna wajib
+
+| Token         | Warna     | Penggunaan                                      |
+| ------------- | --------- | ----------------------------------------------- |
+| Black         | `#000000` | Warna utama, tombol utama, teks kuat            |
+| Navy          | `#031B4A` | Header, panel navigasi, teks sekunder kuat      |
+| Deep Blue     | `#022478` | Elemen aktif dan aksen biru gelap               |
+| Blue          | `#1352B9` | Tombol sekunder, tautan, indikator aktif        |
+| Electric Blue | `#00A6FF` | Focus ring, indikator progres, aksen kecil      |
+| Ice Blue      | `#C2DFF3` | Surface aksen, highlight lembut, border pilihan |
+| White         | `#FFFFFF` | Background utama, kartu, area membaca           |
+
+Gunakan warna tersebut secara konsisten. Periksa rasio kontras teks dan background; jangan memakai teks putih pada ice blue untuk ukuran normal apabila kontrasnya tidak mencukupi. Jangan mengubah warna secara otomatis menjadi palet lain.
+
+### Tipografi
+
+* Gunakan font UI modern yang mudah dibaca, misalnya Inter atau font sans-serif setara.
+* Gunakan font Arab yang mendukung bentuk huruf tersambung, harakat, tanda waqaf, dan karakter Unicode Al-Qur'an.
+* Pilih font Arab seperti Amiri atau Noto Naskh Arabic jika tersedia dan lisensinya sesuai.
+* Sediakan fallback font lokal agar aplikasi tidak kehilangan keterbacaan ketika font eksternal gagal dimuat.
+* Gunakan `font-display: swap` jika sesuai dan hindari layout shift berlebihan.
+* Pisahkan font antarmuka dan font ayat.
+* Sediakan kontrol ukuran font Arab dan tinggi baris.
+
+### Komponen visual
+
+Buat reusable components:
+
+* `AppHeader`
+* `BottomNavigation`
+* `DesktopSidebar`
+* `SurahCard`
+* `AyahCard`
+* `ArabicText`
+* `TranslationText`
+* `ReadingProgress`
+* `SearchBar`
+* `BookmarkButton`
+* `AudioPlayer`
+* `MiniPlayer`
+* `TafsirPanel`
+* `SettingsPanel`
+* `LoadingState`
+* `ErrorState`
+* `EmptyState`
+* `OfflineBanner`
+* `InstallAppPrompt`
+* `ConfirmDialog`
+* `ToastNotification`
+
+Gunakan ikon SVG atau library ikon yang konsisten. Jangan membuat setiap ikon dengan gaya berbeda.
+
+---
+
+## 3. TEKNOLOGI DAN ARSITEKTUR
+
+Gunakan React sesuai starter project Google AI Studio Build.
+
+* Pertahankan toolchain dan dependency yang sudah tersedia apabila layak.
+* Gunakan TypeScript jika starter project sudah mendukungnya atau migrasi dapat dilakukan tanpa merusak workspace.
+* Gunakan komponen fungsional dan hooks.
+* Gunakan React Router atau routing yang sesuai dengan starter project.
+* Pisahkan presentation, business logic, API, dan persistence.
+* Hindari satu file besar yang berisi seluruh aplikasi.
+* Hindari dependency tambahan yang tidak diperlukan.
+* Jangan mengarang hasil API atau membuat data dummy yang terlihat seperti data Al-Qur'an asli.
+
+Struktur yang disarankan:
+
+```text
+src/
+├── app/
+│   ├── App.jsx
+│   ├── router.jsx
+│   └── providers/
+├── config/
+│   └── app.config.js
+├── components/
+│   ├── layout/
+│   ├── reader/
+│   ├── audio/
+│   ├── search/
+│   └── common/
+├── pages/
+│   ├── HomePage.jsx
+│   ├── SurahListPage.jsx
+│   ├── ReaderPage.jsx
+│   ├── SearchPage.jsx
+│   ├── BookmarksPage.jsx
+│   ├── HistoryPage.jsx
+│   └── SettingsPage.jsx
+├── services/
+│   ├── quranApi.js
+│   ├── audioService.js
+│   └── searchService.js
+├── hooks/
+├── store/
+├── utils/
+├── styles/
+│   ├── tokens.css
+│   └── global.css
+└── main.jsx
+
+public/
+├── manifest.webmanifest
+├── icons/
+└── offline.html
+```
+
+Struktur ini merupakan acuan, bukan alasan untuk merombak starter project yang sudah benar.
+
+---
+
+## 4. INTEGRASI API AL-QUR'AN
+
+API utama:
+
+`https://equran.id/api/v2`
+
+Dokumentasi:
+
+`https://equran.id/apidev/v2`
+
+Sebelum implementasi, periksa dokumentasi API dan respons endpoint yang benar-benar tersedia.
+
+Jangan menebak endpoint, nama properti, struktur respons, parameter, jumlah qari, format audio, atau skema tafsir.
+
+Buat service layer terpusat dengan tanggung jawab:
+
+* Request API.
+* Validasi status HTTP dan bentuk respons.
+* Normalisasi data tanpa mengubah teks asli.
+* Timeout.
+* Penanganan pembatalan request jika navigasi berubah.
+* Retry terbatas untuk kegagalan sementara.
+* Cache data yang sesuai.
+* Penanganan rate limit dan kegagalan server.
+* Pesan error yang mudah dipahami.
+* Logging pengembangan tanpa mengekspos informasi sensitif.
+
+Gunakan `AbortController` apabila didukung.
+
+Jangan melakukan retry tanpa batas. Bedakan kegagalan jaringan, timeout, respons tidak valid, dan kesalahan konfigurasi.
+
+Tampilkan sumber data dan status koneksi secara jelas ketika diperlukan.
+
+### Aturan integritas Al-Qur'an
+
+* Teks Arab, harakat, nomor ayat, terjemahan, dan tafsir harus berasal dari sumber data yang benar-benar tersedia.
+* Jangan menulis ayat pengganti menggunakan AI.
+* Jangan mengarang terjemahan atau tafsir.
+* Jangan memotong teks Arab secara tidak sengaja.
+* Jangan mengubah tanda baca atau karakter Unicode ayat melalui proses normalisasi pencarian.
+* Simpan teks asli secara terpisah dari teks yang telah dinormalisasi untuk pencarian.
+* Tampilkan pesan jika suatu data tidak tersedia, bukan mengisi data dengan konten palsu.
+* Periksa urutan ayat dan hubungan antara nomor surat, nomor ayat, dan data tafsir.
+
+---
+
+## 5. BERANDA
+
+Buat beranda yang langsung membantu pengguna melanjutkan ibadah membaca.
+
+Komponen utama:
+
+1. Header dengan logo, nama `val-qur'an`, dan akses pengaturan.
+2. Salam atau sapaan singkat yang tidak mengganggu.
+3. Kartu **Lanjutkan Membaca** yang memuat nama surat, nomor ayat terakhir, dan tombol lanjut.
+4. Progres tilawah berdasarkan data yang benar-benar tersimpan.
+5. Ringkasan target harian.
+6. Akses cepat menuju daftar surat, pencarian, bookmark, dan riwayat.
+7. Surat terakhir dibaca.
+8. Daftar bookmark terbaru jika tersedia.
+9. Kondisi kosong yang memiliki CTA jelas untuk pengguna baru.
+
+Jangan mengklaim progres atau target sudah tercapai apabila data belum tersedia.
+
+Jika belum ada riwayat membaca, tampilkan CTA untuk mulai membaca, bukan data contoh yang menyesatkan.
+
+---
+
+## 6. DAFTAR 114 SURAT
+
+Buat halaman daftar surat dengan data dari API.
+
+Fitur:
+
+* Memuat seluruh 114 surat.
+* Nama surat Arab.
+* Nama latin.
+* Arti nama surat jika tersedia.
+* Nomor surat.
+* Jumlah ayat.
+* Kategori Makkiyah/Madaniyah jika tersedia.
+* Pencarian berdasarkan nama Arab, nama latin, dan arti.
+* Filter atau pengelompokan yang membantu navigasi.
+* Loading skeleton, error state, retry, dan empty state.
+* Klik surat untuk membuka pembaca.
+* Cache metadata untuk mempercepat pembukaan berikutnya.
+
+Jangan menganggap daftar berhasil hanya karena ada 114 item. Verifikasi bahwa setiap item memiliki identitas valid dan dapat dinavigasikan ke data surat yang sesuai.
+
+---
+
+## 7. PEMBACA AL-QUR'AN
+
+Buat halaman pembaca yang mengutamakan fokus, kenyamanan, dan keakuratan.
+
+Tampilkan:
+
+* Header surat.
+* Nama Arab dan latin.
+* Arti surat jika tersedia.
+* Nomor surat dan jumlah ayat.
+* Basmalah sesuai ketentuan surat dan data sumber.
+* Teks Arab asli lengkap dengan harakat.
+* Nomor ayat yang jelas.
+* Terjemahan bahasa Indonesia.
+* Transliterasi jika tersedia dan dapat diverifikasi.
+* Tombol bookmark.
+* Tombol salin ayat.
+* Tombol bagikan ayat.
+* Tombol pemutaran audio jika tersedia.
+* Navigasi surat sebelumnya dan berikutnya.
+* Navigasi ayat.
+* Akses tafsir.
+* Pengaturan ukuran font.
+* Penanda ayat terakhir dibaca.
+
+Jangan menambahkan basmalah secara otomatis dengan cara yang menyebabkan duplikasi atau mengubah struktur data ayat.
+
+### Navigasi dan posisi membaca
+
+* Gunakan URL atau route yang dapat dibuka langsung.
+* Dukung deep link menuju surat dan ayat.
+* Pulihkan posisi membaca terakhir secara akurat.
+* Simpan progres setelah perubahan posisi membaca yang bermakna.
+* Gunakan scroll anchoring atau mekanisme setara ketika berpindah ayat.
+* Hindari scroll mendadak yang membuat pengguna kehilangan konteks.
+* Pastikan posisi terakhir tetap valid ketika data dimuat ulang.
+
+### Salin dan bagikan
+
+Salin teks Arab dan terjemahan sebagai bagian terpisah atau dengan pemisah yang jelas.
+
+Sertakan referensi surat dan ayat pada konten yang dibagikan.
+
+Gunakan Web Share API jika tersedia, dengan fallback salin ke clipboard. Tangani izin ditolak dan browser yang tidak mendukung API.
+
+---
+
+## 8. TAFSIR
+
+Integrasikan tafsir berdasarkan data yang benar-benar disediakan API.
+
+Persyaratan:
+
+* Tampilkan tafsir yang sesuai dengan surat dan ayat.
+* Jika API menyediakan tafsir per ayat, gunakan pemetaan yang sesuai.
+* Jika tafsir tersedia hanya pada tingkat surat atau dengan struktur lain, ikuti dokumentasinya.
+* Berikan identitas sumber tafsir jika tersedia.
+* Jangan mencampur tafsir satu ayat dengan ayat lain.
+* Jangan mengarang tafsir jika endpoint tidak tersedia.
+* Berikan pesan yang jelas ketika tafsir tidak tersedia atau API gagal.
+
+Jangan mengklaim dukungan tafsir per ayat sebelum endpoint dan struktur responsnya terverifikasi.
+
+---
+
+## 9. AUTO-SCROLL TILAWAH
+
+Implementasikan auto-scroll yang benar-benar bekerja di halaman pembaca.
+
+Kontrol:
+
+* Mulai.
+* Jeda.
+* Lanjutkan.
+* Berhenti.
+* Pengaturan kecepatan.
+
+Persyaratan perilaku:
+
+1. Mulai dari ayat yang dipilih atau ayat pertama sesuai pilihan pengguna.
+2. Gulir secara bertahap hingga akhir surat.
+3. Pengguna tetap bisa melakukan scroll manual.
+4. Jeda menghentikan gerakan tanpa menghilangkan posisi.
+5. Lanjutkan meneruskan dari posisi yang sama.
+6. Berhenti membersihkan aktivitas auto-scroll.
+7. Navigasi ke surat lain harus menghentikan sesi lama.
+8. Unmount komponen harus membersihkan timer, animation frame, observer, dan listener terkait.
+9. Jangan membuat banyak interval atau animation loop secara bersamaan.
+10. Hormati preferensi `prefers-reduced-motion`.
+11. Jangan memaksa scroll ketika pengguna sedang memilih atau menyalin teks.
+
+Gunakan `requestAnimationFrame`, `IntersectionObserver`, atau mekanisme yang tepat berdasarkan implementasi aktual.
+
+Pengaturan kecepatan harus memengaruhi laju scroll secara nyata. Sediakan kontrol manual untuk mematikan auto-scroll.
+
+---
+
+## 10. PENCARIAN GLOBAL AL-QUR'AN
+
+Buat pencarian lintas surat yang berfungsi menggunakan dataset yang benar-benar dimuat dari API.
+
+### Jenis pencarian
+
+* Nama surat.
+* Nomor surat.
+* Nomor ayat.
+* Referensi surat:ayat.
+* Kata dalam terjemahan Indonesia.
+* Frasa dalam terjemahan Indonesia.
+* Pencarian makna melalui kecocokan kata atau frasa yang benar-benar ada dalam terjemahan.
+
+Jangan mengklaim pencarian semantik berbasis AI jika implementasi hanya menggunakan pencocokan kata.
+
+### Indeks pencarian
+
+* Buat indeks dari data ayat dan terjemahan yang berhasil dimuat.
+* Gunakan cache indeks yang sesuai.
+* Normalisasi huruf besar-kecil dan tanda baca untuk pencarian tanpa mengubah teks asli.
+* Dukung pencarian dengan beberapa kata.
+* Gunakan debounce.
+* Hindari memblokir main thread saat indeks besar diproses.
+* Jika dataset belum lengkap, tampilkan cakupan indeks secara transparan.
+* Jangan menampilkan hasil seolah-olah mencakup seluruh Al-Qur'an jika hanya sebagian surat yang sudah diindeks.
+* Tangani kegagalan memuat surat tertentu.
+* Sediakan hasil kosong dan indikator pemuatan.
+
+Setiap hasil menampilkan:
+
+* Cuplikan teks Arab asli.
+* Cuplikan terjemahan yang cocok.
+* Nama dan nomor surat.
+* Nomor ayat.
+* Tombol menuju ayat yang tepat.
+
+Ketika hasil dipilih, buka pembaca pada surat dan ayat tersebut serta sorot hasilnya tanpa mengubah teks sumber.
+
+### Pencarian nomor ayat
+
+Bedakan pencarian nomor surat, nomor ayat, dan format referensi seperti `2:255`. Jangan menganggap input numerik tunggal selalu berarti nomor ayat global.
+
+Validasi nomor surat dan ayat sebelum navigasi.
+
+---
+
+## 11. BOOKMARK, CATATAN, DAN RIWAYAT
+
+Gunakan IndexedDB atau penyimpanan persisten yang sesuai untuk data lokal. LocalStorage dapat digunakan untuk preferensi kecil dan sederhana.
+
+### Bookmark
+
+* Tambah dan hapus bookmark.
+* Cegah duplikasi.
+* Simpan referensi surat dan ayat.
+* Tampilkan bookmark terbaru.
+* Buka bookmark langsung ke ayat yang tepat.
+* Pertahankan bookmark setelah reload.
+
+### Catatan pribadi
+
+* Buat, edit, dan hapus catatan pribadi.
+* Hubungkan catatan dengan surat dan ayat.
+* Simpan waktu pembuatan dan pembaruan.
+* Gunakan validasi input.
+* Jangan mengirim catatan pribadi ke layanan eksternal.
+
+### Riwayat membaca
+
+* Simpan surat terakhir dibaca.
+* Simpan ayat terakhir dibaca.
+* Simpan waktu aktivitas.
+* Hindari mencatat setiap event scroll sebagai riwayat baru.
+* Sediakan tindakan menghapus riwayat.
+
+### Progres tilawah
+
+* Tentukan aturan progres yang konsisten dan jelaskan cara menghitungnya.
+* Pisahkan posisi terakhir membaca dari ayat yang ditandai selesai.
+* Jangan menyatakan seluruh surat selesai hanya karena pengguna membuka ayat terakhir.
+* Pulihkan progres dengan benar setelah reload.
+
+Jelaskan bahwa data lokal dapat hilang ketika pengguna membersihkan data browser atau menghapus aplikasi. Jangan menjanjikan sinkronisasi lintas perangkat tanpa backend yang benar-benar tersedia.
+
+---
+
+## 12. AUDIO MUROTTAL DAN MINI-PLAYER
+
+Integrasikan audio berdasarkan endpoint dan URL yang benar-benar diberikan oleh API.
+
+Persyaratan:
+
+* Pilihan qari berdasarkan daftar yang tersedia.
+* Pemutaran audio surat atau ayat sesuai kemampuan sumber.
+* Play dan pause.
+* Progress bar.
+* Durasi jika tersedia.
+* Seek jika format dan browser mendukung.
+* Kontrol volume jika didukung.
+* Indikator loading dan error.
+* Penanganan autoplay yang diblokir browser.
+* Mini-player ketika pengguna berpindah halaman.
+* Stop atau cleanup saat audio diganti.
+* Penanganan `play()`, `pause()`, `ended`, `error`, dan perubahan metadata.
+
+Jangan membuat URL audio secara spekulatif. Gunakan field URL dari respons API yang telah diverifikasi.
+
+Jika API hanya menyediakan audio surat penuh, jangan mengklaim pemutaran per ayat. Jika tidak ada daftar qari yang dapat diverifikasi, tampilkan status tidak tersedia, bukan daftar qari palsu.
+
+Jangan mengunduh atau menyimpan audio secara otomatis dalam jumlah besar.
+
+---
+
+## 13. PENGATURAN
+
+Buat halaman pengaturan yang mudah digunakan.
+
+Pengaturan minimal:
+
+* Ukuran font Arab.
+* Tinggi baris Arab.
+* Preferensi menampilkan terjemahan.
+* Preferensi menampilkan transliterasi.
+* Target tilawah harian.
+* Pilihan qari yang tersedia.
+* Preferensi tampilan dan animasi yang relevan.
+* Reset pengaturan dengan konfirmasi.
+* Informasi versi aplikasi.
+
+Simpan preferensi secara persisten dan terapkan langsung ketika pengguna mengubahnya.
+
+Jangan menampilkan opsi yang tidak didukung oleh implementasi.
+
+Pertahankan tema sesuai design system hitam–biru dan gunakan mode terang sebagai default. Jangan mengubah tema menjadi palet warna lain.
+
+---
+
+## 14. RESPONSIVE DESIGN DAN AKSESIBILITAS
+
+Dukung ukuran layar mulai dari 320px hingga layar desktop besar.
+
+### Mobile
+
+* Navigasi bawah dengan label yang jelas.
+* Area sentuh ideal minimal 44 × 44 CSS px.
+* Tidak ada horizontal overflow.
+* Kontrol audio tidak menutupi teks ayat.
+* Tombol penting tidak terpotong.
+* Reader memiliki ruang baca yang nyaman.
+* Safe area iOS diperhitungkan.
+
+### Tablet dan desktop
+
+* Gunakan sidebar atau navigasi horizontal jika sesuai.
+* Batasi lebar kolom bacaan agar baris Arab dan terjemahan nyaman dibaca.
+* Gunakan ruang kosong secara proporsional.
+* Hindari konten melebar penuh tanpa batas.
+* Pastikan mini-player dan dialog tidak menutupi kontrol penting.
+
+### Aksesibilitas
+
+* Gunakan elemen HTML semantik.
+* Tambahkan label yang jelas pada tombol ikon.
+* Dukung navigasi keyboard.
+* Tampilkan focus indicator.
+* Gunakan ARIA hanya jika dibutuhkan.
+* Pastikan dialog memiliki fokus yang benar.
+* Hormati pengaturan reduced motion.
+* Periksa kontras warna.
+* Pastikan screen reader dapat membedakan nomor ayat, teks Arab, terjemahan, dan kontrolnya.
+
+Uji setidaknya lebar 320px, 360px, 390px, 768px, 1024px, dan 1440px jika fasilitas preview memungkinkan.
+
+---
+
+## 15. PWA DAN KEMAMPUAN OFFLINE
+
+Jadikan aplikasi PWA-ready menggunakan mekanisme yang sesuai dengan starter project.
+
+Implementasikan:
+
+* `manifest.webmanifest`.
+* Nama dan short name `val-qur'an`.
+* Ikon aplikasi yang valid dalam beberapa ukuran.
+* Ikon maskable jika sesuai.
+* Warna tema sesuai palet.
+* `display: standalone` jika tepat.
+* Service worker.
+* Cache aset statis yang aman.
+* Offline fallback.
+* Strategi cache API yang terukur.
+* Update lifecycle untuk service worker.
+* Indikator status online/offline.
+* Mekanisme instalasi yang mengikuti dukungan browser.
+
+### Strategi cache
+
+* Cache-first untuk aset statis yang versioned dan aman.
+* Network-first atau strategi lain yang sesuai untuk data dinamis.
+* Tetapkan batas cache dan kebijakan pembersihan.
+* Hindari cache yang tidak terkendali.
+* Jangan menyimpan respons error seolah-olah sebagai data Al-Qur'an valid.
+* Validasi respons sebelum menyimpan ke cache.
+* Beri indikator jika konten yang tampil berasal dari cache.
+
+### Instalasi
+
+* Gunakan `beforeinstallprompt` hanya pada browser yang mendukungnya.
+* Sediakan instruksi instalasi manual jika API tidak tersedia.
+* Deteksi standalone mode bila didukung.
+* Hormati pembatasan instalasi iOS/iPadOS.
+* Jangan menampilkan prompt berulang yang mengganggu.
+* Jangan mengklaim aplikasi sudah terpasang atau bisa diinstal pada setiap browser.
+
+### Offline
+
+* Pastikan shell aplikasi dan halaman fallback dapat diakses sesuai cache yang tersedia.
+* Tampilkan data surat yang sebelumnya benar-benar tersimpan jika implementasi mendukungnya.
+* Tampilkan status offline dan data yang tersedia.
+* Jangan menjanjikan seluruh 114 surat dapat dibaca offline sebelum data lengkap benar-benar tersimpan.
+* Jangan menyimpan semua audio atau dataset besar secara otomatis.
+
+### Ikon aplikasi
+
+Gunakan logo val-qur'an yang tersedia dalam project jika sudah ada. Jika belum, buat ikon yang konsisten dengan identitas hitam–biru dan simbol kaligrafi Islami yang sederhana. Hindari teks Arab hasil generasi yang tidak akurat.
+
+Pastikan seluruh file ikon benar-benar ada dan ukuran file yang disebutkan di manifest sesuai dengan aset aktual.
+
+---
+
+## 16. KEAMANAN DAN PRIVASI
+
+* Jangan menaruh API secret atau kredensial privat di frontend.
+* Jangan mengevaluasi teks API sebagai JavaScript.
+* Hindari rendering HTML tidak tepercaya menggunakan `dangerouslySetInnerHTML`.
+* Validasi data sebelum menyimpannya.
+* Batasi ukuran catatan pribadi.
+* Jangan mengirim catatan, bookmark, atau riwayat ke pihak ketiga tanpa persetujuan dan implementasi yang jelas.
+* Gunakan URL API melalui HTTPS.
+* Hindari menampilkan stack trace kepada pengguna.
+* Jangan menyimpan data sensitif yang tidak dibutuhkan.
+* Pertimbangkan kebijakan CORS dan batasan browser saat menguji API.
+* Gunakan dependency yang relevan dan terpelihara.
+* Tangani error tanpa membocorkan informasi internal.
+
+Jangan menyatakan seluruh aplikasi aman hanya karena tidak ada kredensial di frontend. Catat area keamanan yang belum diaudit.
+
+---
+
+## 17. PERFORMA
+
+Optimalkan pengalaman pada perangkat Android kelas menengah.
+
+* Lazy-load halaman dan komponen berat jika sesuai.
+* Hindari request API duplikat.
+* Gunakan cache metadata surat.
+* Terapkan debounce pencarian.
+* Batasi render ulang yang tidak perlu.
+* Gunakan pagination atau virtualisasi bila dataset besar memerlukannya.
+* Jangan merender seluruh dataset ayat ke DOM tanpa alasan.
+* Optimalkan ukuran ikon dan font.
+* Hindari dependensi besar untuk fitur sederhana.
+* Pastikan pergantian halaman tidak meninggalkan timer, audio, atau listener aktif.
+* Tampilkan loading state tanpa layout shift berlebihan.
+
+Jangan mengorbankan akurasi teks demi optimasi. Jangan memotong ayat hanya agar performa terlihat lebih cepat.
+
+---
+
+## 18. STRATEGI PENGUJIAN WAJIB
+
+Lakukan implementasi dan pengujian secara bertahap. Jangan mengklaim fitur lolos pengujian hanya karena komponen terlihat di preview.
+
+### A. Build dan startup
+
+* Instalasi dependency sesuai starter project.
+* Jalankan build produksi.
+* Jalankan preview jika tersedia.
+* Periksa console error dan warning yang relevan.
+* Periksa error import, route, dan runtime.
+* Perbaiki error yang dapat diperbaiki dalam lingkungan.
+
+### B. API dan data
+
+* Verifikasi endpoint daftar surat.
+* Verifikasi detail surat.
+* Periksa bahwa seluruh 114 surat dapat dimuat dan memiliki data valid.
+* Periksa urutan ayat pada beberapa surat dengan panjang berbeda.
+* Verifikasi terjemahan dan tafsir sesuai respons sumber.
+* Uji timeout, jaringan terputus, respons tidak valid, dan retry.
+* Pastikan data error tidak disimpan sebagai data valid.
+
+### C. Pencarian
+
+* Uji pencarian nama surat.
+* Uji pencarian arti surat.
+* Uji pencarian kata dalam terjemahan.
+* Uji frasa beberapa kata.
+* Uji referensi `2:255`.
+* Uji nomor surat dan validasi nomor ayat.
+* Pastikan hasil membuka surat dan ayat yang benar.
+* Verifikasi apakah indeks mencakup seluruh surat atau hanya data yang telah dimuat.
+
+### D. Pembaca dan auto-scroll
+
+* Uji navigasi antar surat.
+* Uji deep link menuju ayat.
+* Uji perubahan ukuran font.
+* Uji salin dan bagikan.
+* Uji auto-scroll mulai, jeda, lanjutkan, dan berhenti.
+* Uji perubahan kecepatan.
+* Uji scroll manual ketika auto-scroll berjalan.
+* Uji navigasi keluar ketika auto-scroll aktif.
+* Pastikan tidak ada timer atau animation loop yang tertinggal.
+
+### E. Bookmark dan persistence
+
+* Tambahkan bookmark.
+* Reload halaman.
+* Pastikan bookmark masih tersedia.
+* Hapus bookmark dan verifikasi.
+* Buat, edit, dan hapus catatan.
+* Uji riwayat dan posisi terakhir membaca.
+* Uji perubahan pengaturan setelah reload.
+
+### F. Audio
+
+* Verifikasi URL audio dari API.
+* Uji pemutaran, pause, progress, dan error.
+* Uji qari yang benar-benar tersedia.
+* Uji mini-player saat navigasi.
+* Uji browser yang menolak autoplay.
+* Jangan menyatakan audio berfungsi jika tidak ada sumber audio valid atau pemutaran tidak dapat diuji.
+
+### G. PWA
+
+* Validasi manifest.
+* Periksa keberadaan aset ikon.
+* Periksa registrasi service worker.
+* Uji cache aset.
+* Uji fallback offline.
+* Uji pembaruan cache.
+* Uji mekanisme instalasi sesuai browser yang tersedia.
+* Jangan mengklaim HTTPS production atau instalasi lintas perangkat telah diverifikasi jika deployment belum dilakukan.
+
+### H. Responsive
+
+Periksa layout pada ukuran:
+
+* 320 × 640.
+* 360 × 800.
+* 390 × 844.
+* 768 × 1024.
+* 1024 × 768.
+* 1440 × 900.
+
+Periksa overflow, keterbacaan Arab, tombol yang terpotong, navigasi yang menutupi konten, modal, dan mini-player.
+
+### I. Branding
+
+Ubah konfigurasi secara lokal untuk memastikan:
+
+* Nama aplikasi berasal dari satu sumber.
+* Warna komponen menggunakan token konfigurasi.
+* Metadata dan manifest konsisten.
+* Tidak ada warna lama yang tersisa akibat hardcode.
+* Nama `val-qur'an` ditampilkan dengan benar di seluruh UI.
+
+Jika sebuah pengujian tidak dapat dijalankan, tandai sebagai belum terverifikasi dan jelaskan alasannya.
+
+---
+
+## 19. DEFINISI SELESAI
+
+Aplikasi baru boleh dinyatakan selesai jika:
+
+1. Beranda dan seluruh halaman utama dapat dibuka.
+2. Daftar 114 surat berasal dari API yang valid.
+3. Pembaca menampilkan teks Arab dan terjemahan dari sumber yang benar.
+4. Navigasi surat dan ayat bekerja.
+5. Pencarian menampilkan cakupan indeks secara jujur dan dapat membuka hasil yang tepat.
+6. Bookmark dan pengaturan tetap tersimpan setelah reload.
+7. Auto-scroll dapat dikontrol dan dibersihkan dengan benar.
+8. Audio benar-benar dapat diputar apabila sumber yang diperlukan tersedia.
+9. Tafsir ditampilkan berdasarkan data API yang terverifikasi.
+10. Layout responsif dan tidak memiliki overflow kritis pada ukuran yang diuji.
+11. Build dan preview berhasil jika fasilitas tersebut tersedia.
+12. Tidak terdapat error runtime kritis yang belum ditangani.
+13. Manifest, ikon, dan service worker tervalidasi jika PWA diimplementasikan.
+14. Kegagalan jaringan dan data yang tidak tersedia ditangani dengan benar.
+15. Tidak ada konten Al-Qur'an, tafsir, atau URL audio yang dikarang.
+
+Gunakan status berikut dalam laporan akhir:
+
+* **LULUS:** Pengujian benar-benar dijalankan dan berhasil.
+* **GAGAL:** Pengujian dijalankan dan menemukan masalah.
+* **BELUM DIVERIFIKASI:** Pengujian tidak dapat dilakukan atau belum ada bukti yang memadai.
+* **TIDAK DIDUKUNG:** Lingkungan atau sumber data memang tidak menyediakan kemampuan tersebut.
+
+---
+
+## 20. URUTAN PELAKSANAAN
+
+Kerjakan seluruh tahap berikut secara berurutan tanpa menunggu instruksi tambahan:
+
+**Tahap 1 — Audit**
+
+* Periksa starter project, dependency, struktur file, dan fasilitas build.
+* Periksa dokumentasi API.
+* Identifikasi endpoint dan field respons yang benar-benar tersedia.
+
+**Tahap 2 — Fondasi**
+
+* Terapkan konfigurasi terpusat.
+* Bangun design system.
+* Buat API service, model data, routing, dan persistence.
+* Siapkan struktur PWA.
+
+**Tahap 3 — Fitur inti**
+
+* Implementasikan beranda.
+* Implementasikan daftar surat dan pembaca.
+* Implementasikan pencarian global.
+* Implementasikan bookmark, catatan, riwayat, dan progres.
+* Implementasikan tafsir dan audio sesuai dukungan API.
+* Implementasikan auto-scroll.
+* Implementasikan pengaturan.
+
+**Tahap 4 — PWA dan responsivitas**
+
+* Terapkan manifest, ikon, service worker, caching, dan offline fallback.
+* Pastikan UI adaptif untuk mobile, tablet, dan desktop.
+
+**Tahap 5 — Pengujian**
+
+* Jalankan build.
+* Jalankan preview.
+* Uji fitur secara nyata.
+* Perbaiki error yang ditemukan.
+* Ulangi pengujian yang terdampak oleh perubahan.
+
+**Tahap 6 — Laporan akhir**
+
+* Ringkas fitur yang selesai.
+* Sajikan tabel pengujian beserta statusnya.
+* Sebutkan kendala API atau lingkungan.
+* Sebutkan fitur yang masih memerlukan konfigurasi eksternal.
+* Jelaskan cara menjalankan dan melakukan deployment.
+* Jangan mengklaim deployment telah berhasil jika aplikasi belum benar-benar dideploy.
+
+---
+
+## FINAL OBJECTIVE
+
+Hasil akhir adalah **val-qur'an**, aplikasi Al-Qur'an digital dengan identitas hitam–biru premium, teks Al-Qur'an yang akurat, pencarian lintas surat, pembaca yang nyaman, auto-scroll, bookmark, catatan, progres tilawah, tafsir, audio murottal, serta dukungan PWA yang diverifikasi berdasarkan kemampuan nyata.
+
+Prioritaskan akurasi data, fungsionalitas, aksesibilitas, dan keandalan di atas animasi atau dekorasi.
+
+**Mulai dengan mengaudit starter project dan dokumentasi API, lalu implementasikan aplikasi langsung di Google AI Studio Build. Jangan berhenti pada rencana atau contoh kode. Jalankan pengujian yang tersedia dan laporkan hasilnya secara jujur.**

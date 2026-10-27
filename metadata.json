@@ -1,0 +1,6 @@
+{
+  "name": "val-qur'an",
+  "description": "Teman Tilawah dalam Genggaman. Aplikasi Al-Qur'an digital premium dengan teks akurat, terjemahan Kemenag RI, audio murottal 6 qari, auto-scroll tilawah, pencarian global, dan bookmark.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
