@@ -204,7 +204,7 @@ export const PrayerTimesPage: React.FC<PrayerTimesPageProps> = ({
   const bantenShortcuts = CITY_PRESETS.filter((c) => c.province === 'Banten').slice(0, 5);
 
   return (
-    <div className="space-y-6 pb-24 md:pb-12 max-w-3xl mx-auto">
+    <div className="space-y-6 pb-24 md:pb-12 max-w-4xl lg:max-w-5xl mx-auto w-full">
       {/* Title & Top Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>

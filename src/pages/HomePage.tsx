@@ -114,7 +114,23 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="space-y-6 pb-20 md:pb-12 max-w-4xl mx-auto">
+    <div className="space-y-6 pb-20 md:pb-12 max-w-5xl mx-auto w-full">
+      {/* ============================================================ */}
+      {/* HEADER BERANDA: Logo 1 & Logo 2 tepat di atas background      */}
+      {/* ============================================================ */}
+      <div className="flex items-center gap-3.5 px-1">
+        <img
+          src="/assets/aistudio/Picsart_26-10-29_14-24-45-911_87dd260a.png"
+          alt="Logo"
+          className="h-[50px] w-[50px] object-contain drop-shadow-xs"
+        />
+        <img
+          src="/assets/aistudio/IMG-20261029-WA0002-removebg-preview_3d60d232.png"
+          alt="Logo"
+          className="h-[50px] w-[50px] object-contain drop-shadow-xs"
+        />
+      </div>
+
       {/* ============================================================ */}
       {/* 1. HERO SECTION: Serene Mosque Visual & Islamic Reflection */}
       {/* ============================================================ */}

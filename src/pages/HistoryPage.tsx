@@ -17,7 +17,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   return (
-    <div className="space-y-6 pb-24 md:pb-12 max-w-4xl mx-auto">
+    <div className="space-y-6 pb-24 md:pb-12 max-w-4xl lg:max-w-5xl mx-auto w-full">
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>

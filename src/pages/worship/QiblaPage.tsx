@@ -83,7 +83,16 @@ export const QiblaPage: React.FC = () => {
     Math.abs(qiblaResult.qiblaBearing - deviceHeading) <= 3;
 
   return (
-    <div className="space-y-6 pb-24 md:pb-12 max-w-2xl mx-auto text-center">
+    <div className="space-y-6 pb-24 md:pb-12 max-w-3xl lg:max-w-4xl mx-auto w-full text-center">
+      {/* Header Halaman Kompas: Gambar ke-3 (50px, hanya logo) */}
+      <div className="flex justify-center">
+        <img
+          src="/assets/aistudio/Picsart_26-10-29_14-25-36-467_7949ac61.png"
+          alt="Logo"
+          className="h-[50px] w-[50px] object-contain drop-shadow-xs"
+        />
+      </div>
+
       {/* Title */}
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-[#031B4A]">

@@ -8,6 +8,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { AudioProvider } from './context/AudioContext';
 import { AppHeader } from './components/layout/AppHeader';
+import { AppFooter } from './components/layout/AppFooter';
 import { BottomNavigation } from './components/layout/BottomNavigation';
 import { DesktopSidebar } from './components/layout/DesktopSidebar';
 import { MiniPlayer } from './components/audio/MiniPlayer';
@@ -178,7 +179,7 @@ function QuranAppContent() {
           <InstallAppPrompt onOpenDownloadPage={() => handleNavigate('download')} />
 
           {/* Page Routing Views */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+          <main className="flex-1 px-3 py-4 sm:px-6 sm:py-6 lg:px-6 lg:py-6 max-w-7xl w-full mx-auto">
             {/* Core Quran Views */}
             {currentTab === 'home' && <HomePage onNavigate={handleNavigate} />}
 
@@ -270,6 +271,9 @@ function QuranAppContent() {
               />
             )}
           </main>
+
+          {/* Global Footer with the 3 logos */}
+          <AppFooter />
         </div>
       </div>
 

@@ -75,7 +75,7 @@ export const SurahListPage: React.FC<SurahListPageProps> = ({ onSelectSurah }) =
   }, [surahs, filterType, searchQuery]);
 
   return (
-    <div className="space-y-6 pb-24 md:pb-12 max-w-5xl mx-auto">
+    <div className="space-y-6 pb-24 md:pb-12 max-w-5xl mx-auto w-full">
       {/* Title & Stats */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>

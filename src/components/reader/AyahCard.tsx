@@ -24,6 +24,7 @@ interface AyahCardProps {
   surahNameArabic: string;
   onOpenTafsir: (ayahNumber: number) => void;
   onOpenNote: (ayahNumber: number) => void;
+  onPlayAyah?: (ayahNumber: number) => void;
   isHighlighted?: boolean;
 }
 
@@ -34,6 +35,7 @@ export const AyahCard: React.FC<AyahCardProps> = ({
   surahNameArabic,
   onOpenTafsir,
   onOpenNote,
+  onPlayAyah,
   isHighlighted = false
 }) => {
   const { currentTrack, isPlaying, playTrack, togglePlay } = useAudio();
@@ -48,6 +50,11 @@ export const AyahCard: React.FC<AyahCardProps> = ({
     isPlaying;
 
   const handlePlayAyah = () => {
+    if (onPlayAyah) {
+      onPlayAyah(ayah.nomorAyat);
+      return;
+    }
+
     if (isCurrentPlaying) {
       togglePlay();
       return;
@@ -107,9 +114,9 @@ export const AyahCard: React.FC<AyahCardProps> = ({
   return (
     <article
       id={`ayah-${ayah.nomorAyat}`}
-      className={`group p-4 md:p-6 rounded-2xl border transition-all duration-200 ${
+      className={`group p-4 md:p-6 rounded-2xl border transition-all duration-300 scroll-mt-28 ${
         isCurrentPlaying
-          ? 'bg-[#C2DFF3]/20 border-[#1352B9] ring-2 ring-[#00A6FF]'
+          ? 'bg-[#C2DFF3]/25 border-[#00A6FF] ring-2 ring-[#00A6FF] shadow-sm'
           : isHighlighted
           ? 'bg-[#C2DFF3]/30 border-[#00A6FF]'
           : 'bg-[#FFFFFF] border-[#E2E8F0] hover:border-slate-300 shadow-2xs'

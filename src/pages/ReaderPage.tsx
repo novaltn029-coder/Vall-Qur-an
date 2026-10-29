@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { quranApi } from '../services/quranApi';
 import { SurahDetail } from '../types/quran';
 import { AyahCard } from '../components/reader/AyahCard';
@@ -36,7 +36,7 @@ export const ReaderPage: React.FC<ReaderPageProps> = ({
   onNavigateSurah,
   onBack
 }) => {
-  const { settings, updateSettings, saveLastRead } = useApp();
+  const { settings, updateSettings, saveLastRead, showToast } = useApp();
   const { currentTrack, isPlaying, playTrack, togglePlay } = useAudio();
 
   const [surahData, setSurahData] = useState<SurahDetail | null>(null);
@@ -159,6 +159,83 @@ export const ReaderPage: React.FC<ReaderPageProps> = ({
     });
   };
 
+  // Automated sequential playback for partial ayah audio with smooth auto-scroll downward
+  const playAyahSequentially = useCallback(
+    (ayahNum: number) => {
+      if (!surahData) return;
+
+      const targetAyah = surahData.ayat.find((a) => a.nomorAyat === ayahNum);
+      if (!targetAyah) return;
+
+      const qariId = settings.defaultQariId || '05';
+      const audioUrl = targetAyah.audio[qariId] || targetAyah.audio['05'] || targetAyah.audio['01'];
+      const qariInfo = APP_CONFIG.qariList.find((q) => q.id === qariId) || APP_CONFIG.qariList[4];
+
+      if (!audioUrl) {
+        showToast(`Audio untuk ayat ${ayahNum} belum tersedia dari server.`, 'warning');
+        return;
+      }
+
+      setHighlightedAyah(ayahNum);
+
+      // Auto-scroll effect downward to the active ayah
+      setTimeout(() => {
+        const el = document.getElementById(`ayah-${ayahNum}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 80);
+
+      // Save reading progress
+      saveLastRead({
+        surahNumber: surahData.nomor,
+        surahNameLatin: surahData.namaLatin,
+        surahNameArabic: surahData.nama,
+        ayahNumber: ayahNum
+      });
+
+      // Play track with callback to automatically advance to next ayah upon completion
+      playTrack(
+        {
+          surahNumber: surahData.nomor,
+          surahNameLatin: surahData.namaLatin,
+          ayahNumber: ayahNum,
+          qariId,
+          qariName: qariInfo.name,
+          audioUrl
+        },
+        () => {
+          // Track ended callback: continue to next ayah automatically with auto-scroll
+          const nextAyahNum = ayahNum + 1;
+          if (nextAyahNum <= surahData.jumlahAyat) {
+            setTimeout(() => {
+              playAyahSequentially(nextAyahNum);
+            }, 300);
+          } else {
+            showToast(`Selesai tilawah Surat ${surahData.namaLatin}.`, 'success');
+          }
+        }
+      );
+    },
+    [surahData, settings.defaultQariId, playTrack, showToast, saveLastRead]
+  );
+
+  const handleToggleAyahAudio = useCallback(
+    (ayahNum: number) => {
+      const isCurrentlyPlayingThisAyah =
+        currentTrack?.surahNumber === surahNumber &&
+        currentTrack?.ayahNumber === ayahNum &&
+        isPlaying;
+
+      if (isCurrentlyPlayingThisAyah) {
+        togglePlay();
+      } else {
+        playAyahSequentially(ayahNum);
+      }
+    },
+    [currentTrack, surahNumber, isPlaying, togglePlay, playAyahSequentially]
+  );
+
   // Basmalah logic:
   // Surah 1: Ayah 1 is already Basmalah.
   // Surah 9 (At-Taubah): Does NOT have Basmalah.
@@ -166,7 +243,7 @@ export const ReaderPage: React.FC<ReaderPageProps> = ({
   const showBasmalahHeader = surahNumber !== 1 && surahNumber !== 9;
 
   return (
-    <div ref={topRef} className="space-y-6 pb-28 md:pb-16 max-w-4xl mx-auto">
+    <div ref={topRef} className="space-y-6 pb-28 md:pb-16 max-w-4xl lg:max-w-5xl mx-auto w-full">
       {/* Top back & toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 sticky top-16 z-20 bg-white/95 backdrop-blur-xs py-2.5 px-2 border-b border-slate-200">
         <button
@@ -392,6 +469,7 @@ export const ReaderPage: React.FC<ReaderPageProps> = ({
                   setSelectedNoteAyah(num);
                   setNoteModalOpen(true);
                 }}
+                onPlayAyah={handleToggleAyahAudio}
                 isHighlighted={highlightedAyah === ayah.nomorAyat}
               />
             ))}

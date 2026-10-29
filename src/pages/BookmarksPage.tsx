@@ -33,7 +33,7 @@ export const BookmarksPage: React.FC<BookmarksPageProps> = ({
   } | null>(null);
 
   return (
-    <div className="space-y-6 pb-24 md:pb-12 max-w-4xl mx-auto">
+    <div className="space-y-6 pb-24 md:pb-12 max-w-4xl lg:max-w-5xl mx-auto w-full">
       {/* Title */}
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-[#031B4A]">

@@ -24,13 +24,14 @@ interface AudioContextValue {
   duration: number;
   volume: number;
   error: string | null;
-  playTrack: (track: CurrentTrack) => void;
+  playTrack: (track: CurrentTrack, onEnded?: () => void) => void;
   togglePlay: () => void;
   pause: () => void;
   resume: () => void;
   seek: (timeSeconds: number) => void;
   setVolumeLevel: (vol: number) => void;
   stopAudio: () => void;
+  setOnTrackEnded: (callback: (() => void) | null) => void;
 }
 
 const AudioContext = createContext<AudioContextValue | null>(null);
@@ -45,6 +46,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [error, setError] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const onEndedRef = useRef<(() => void) | null>(null);
 
   // Initialize single HTMLAudioElement instance
   useEffect(() => {
@@ -81,6 +83,10 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const handleEnded = () => {
       setIsPlaying(false);
       setCurrentTime(0);
+      if (onEndedRef.current) {
+        const cb = onEndedRef.current;
+        cb();
+      }
     };
 
     const handleError = () => {
@@ -112,11 +118,18 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
   }, []);
 
-  const playTrack = useCallback((track: CurrentTrack) => {
+  const setOnTrackEnded = useCallback((callback: (() => void) | null) => {
+    onEndedRef.current = callback;
+  }, []);
+
+  const playTrack = useCallback((track: CurrentTrack, onEnded?: () => void) => {
     if (!audioRef.current) return;
     setError(null);
     setCurrentTrack(track);
     setIsLoading(true);
+    if (onEnded !== undefined) {
+      onEndedRef.current = onEnded;
+    }
 
     const audio = audioRef.current;
     if (audio.src !== track.audioUrl) {
@@ -179,6 +192,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   const stopAudio = useCallback(() => {
+    onEndedRef.current = null;
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
@@ -208,7 +222,8 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         resume,
         seek,
         setVolumeLevel,
-        stopAudio
+        stopAudio,
+        setOnTrackEnded
       }}
     >
       {children}
